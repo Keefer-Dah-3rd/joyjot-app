@@ -8,10 +8,19 @@
 import SwiftUI
 
 @main
-struct jj_test2App: App {
+struct JoyJotApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainRouterView()
         }
     }
 }
+
+//@main
+//struct jj_test2App: App {
+//    var body: some Scene {
+//        WindowGroup {
+//            ContentView()
+//        }
+//    }
+//}
