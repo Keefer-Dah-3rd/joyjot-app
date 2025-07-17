@@ -30,8 +30,12 @@ struct SplashView: View {
             Text(text)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(Color(hex: "#FFF"))
-                .foregroundColor(Color(hex: "#3D0024"))
+                .background(Color(hex: "#132B64"))
+                .foregroundColor(Color(hex: "#FFF"))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color(hex: "#FFF"), lineWidth: 2)
+                )
                 .cornerRadius(20)
                 .shadow(color: .black.opacity(0.2), radius: 4, x: 2, y: 2)
                 .offset(x: baseX + offsetX, y: baseY + offsetY)
@@ -53,12 +57,11 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Color(hex: "#21077D"), Color(hex: "#2A003A")], startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
+            bgSplash()
 
             VStack {
                 VStack(spacing: 12) {
-                    Image("logo3")
+                    Image("bLogo")
                         .resizable()
                         .padding(.top, 80)
                         .scaledToFit()
@@ -75,15 +78,11 @@ struct SplashView: View {
                     .frame(height: 180)
                     .padding(.top, 16)
 
-                    Text("Spread Kindness")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(Color(hex: "#F00C91"))
+                    Text("Spread Kindness").style(.title)
                         .padding(.top, 64)
 
-                    Text("Send anonymous compliments to\nbrighten someone's day")
+                    Text("Send anonymous compliments to brighten someone's day").style(.body)
                         .multilineTextAlignment(.center)
-                        .foregroundColor(.white)
-                        .font(.system(size: 20))
                         .padding(.top, 8)
                 }
                 .frame(maxHeight: .infinity)
@@ -99,7 +98,7 @@ struct SplashView: View {
                             .background(Color.black.opacity(0.6))
                             .foregroundColor(.white)
                             .cornerRadius(10)
-
+                        
                         Text("(603)320-9772")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -107,23 +106,13 @@ struct SplashView: View {
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-
-                    Button(action: {
-                        withAnimation {
-                            flow = .contacts
-                        }
-                    }) {
-                        Text("Log in / Sign up")
-                            .font(.system(size: 18, weight: .semibold))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(hex: "#F00C91"))
-                            .foregroundColor(.white)
-                            .cornerRadius(30)
+                    .padding(.horizontal, 40)
+                    
+                    ctaButton(title: "Log in / Sign up") {
+                        flow = .contacts // or whichever view you want to navigate to
                     }
+                    .padding(.bottom, 64)
                 }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 24)
             }
         }
     }

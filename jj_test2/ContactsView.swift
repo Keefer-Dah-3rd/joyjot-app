@@ -3,91 +3,77 @@ import SwiftUI
 struct ContactsView: View {
     @Binding var flow: AppFlow
     @State private var searchText = ""
+    @State private var selectedTab = "Recent"
 
     var body: some View {
-        ZStack {
-            Color(hex: "#21077D").ignoresSafeArea()
+        ZStack(alignment: .top) {
+            Color.bg1.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // 🔺 Top Nav
-                HStack {
-                    Button(action: {
-                        withAnimation {
-                            flow = .splash
-                        }
-                    }) {
-                        Image(systemName: "arrow.left")
-                            .foregroundColor(Color(hex: "#F00C91"))
-                            .font(.title2)
-                    }
-
-                    Spacer()
-
-                    Image(systemName: "person.fill")
-                        .foregroundColor(Color(hex: "#F00C91"))
-                        .font(.title2)
-                }
-                .padding(.horizontal, 40)
-                .padding(.top, 60) // Safe area spacing
-                .padding(.bottom, 20)
-
-                Spacer()
-
-                // 🔍 Search & Manual Entry Section
+                // 🔹 Sticky Header
                 VStack(spacing: 16) {
-                    TextField("", text: $searchText)
-                        .padding()
-                        .background(Color.black.opacity(0.6))
-                        .cornerRadius(10)
-                        .foregroundColor(.white)
-                        .placeholder(when: searchText.isEmpty) {
-                            Text("Search contacts...")
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 16)
-                        }
+                    NavHeader(flow: $flow, backTarget: .splash)
 
-                    Button(action: {
-                        flow = .content
-                    }) {
-                        Text("Enter Number Manually")
-                            .font(.system(size: 18, weight: .semibold))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(hex: "#F00C91"))
-                            .foregroundColor(.white)
-                            .cornerRadius(30)
-                    }
-                }
-                .padding(.horizontal, 40)
+                    // Search field
+                    ShortInput(placeholder: "Search contacts", text: $searchText)
 
-                Divider()
-                    .background(Color.white.opacity(0.2))
-                    .padding(.vertical, 32)
-                    .padding(.horizontal, 40)
-
-                // 🧑‍🤝‍🧑 Recent Contacts Section
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Recent contacts")
-                        .foregroundColor(.white)
-                        .fontWeight(.bold)
-
-                    VStack(spacing: 16) {
-                        ContactCard(name: "Monkey D. Luffy", number: "+1 (585) 973-4392", imageName: "VD_avatar-1") {
+                    // CTA row
+                    HStack {
+                        ctaButton(title: "Enter Number Manually") {
                             flow = .content
                         }
-                        ContactCard(name: "Roronoa Zoro", number: "+1 (585) 973-4392", imageName: "VD_avatar-2")
-                        ContactCard(name: "Nami Bell-mère", number: "+1 (585) 973-4392", imageName: "VD_avatar-3")
-                        ContactCard(name: "Soga King", number: "+1 (585) 973-4392", imageName: "VD_avatar-4")
+                    }
+                    
+                }
+                .padding(.top, 20)
+                .padding(.bottom, 40)
+                .zIndex(1)
+
+                // 🔷 Scrollable Contact Section with Blue Background
+                GeometryReader { geometry in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            // Tab headers
+                            HStack {
+                                Text("Recent contacts")
+                                    .style(.subtitle)
+                                Spacer()
+                                Text("Favorites")
+                                    .style(.caption)
+                                    .opacity(0.5)
+                            }
+                            .padding(.top, 24)
+
+                            // Contacts
+                            VStack(spacing: 12) {
+                                ForEach(sampleContacts) { contact in
+                                    ContactCard(
+                                        name: contact.name,
+                                        number: contact.number,
+                                        imageName: contact.imageName
+                                    ) {
+                                        flow = .content
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 120)
+                        .padding(.top, 24)
+                        .frame(minHeight: geometry.size.height) // ensure full height scroll
+                        .background(
+                            Color(hex: "#132B64")
+                                .ignoresSafeArea()
+                        )
+                        .cornerRadius(30, corners: [.topLeft, .topRight])
                     }
                 }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 40)
             }
         }
     }
 }
 
-// Contact Card Component
+// MARK: - Contact Card
 struct ContactCard: View {
     let name: String
     let number: String
@@ -114,29 +100,61 @@ struct ContactCard: View {
                 }
 
                 Spacer()
+
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.white)
             }
             .padding()
             .background(Color.black.opacity(0.6))
             .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.white.opacity(0.2), lineWidth: 2)
+            )
         }
     }
 }
 
-// Placeholder modifier
+
+// MARK: - Sample Data
+struct Contact: Identifiable {
+    let id = UUID()
+    let name: String
+    let number: String
+    let imageName: String
+}
+
+let sampleContacts: [Contact] = [
+    .init(name: "Monkey D. Luffy", number: "+1 (585) 973-4392", imageName: "VD_avatar-1"),
+    .init(name: "Roronoa Zoro", number: "+1 (585) 973-4392", imageName: "VD_avatar-2"),
+    .init(name: "Nami Bell-mère", number: "+1 (585) 973-4392", imageName: "VD_avatar-3"),
+    .init(name: "Soga King", number: "+1 (585) 973-4392", imageName: "VD_avatar-4"),
+    .init(name: "Vinsmoke Sanji", number: "+1 (585) 973-4392", imageName: "VD_avatar-5"),
+    .init(name: "Tony Tony Chopper", number: "+1 (585) 973-4392", imageName: "VD_avatar-6")
+]
+
+// MARK: - Corner Radius Extension
 extension View {
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content
-    ) -> some View {
-        ZStack(alignment: alignment) {
-            placeholder().opacity(shouldShow ? 1 : 0)
-            self
-        }
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }
 
-// Preview
+struct RoundedCorner: Shape {
+    var radius: CGFloat
+    var corners: UIRectCorner
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}
+
+// MARK: - Preview
 #Preview {
     ContactsView(flow: .constant(.contacts))
 }

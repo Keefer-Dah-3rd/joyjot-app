@@ -9,41 +9,23 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "#21077D")
-                .ignoresSafeArea()
+            Color.bg1.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // 🔺 Top Nav
-                HStack {
-                    Button(action: {
-                        withAnimation {
-                            flow = .contacts
-                        }
-                    }) {
-                        Image(systemName: "arrow.left")
-                            .foregroundColor(Color(hex: "#F00C91"))
-                            .font(.title2)
-                    }
-
-                    Spacer()
-
-                    Image(systemName: "person.fill")
-                        .foregroundColor(Color(hex: "#F00C91"))
-                        .font(.title2)
-                }
-                .padding(.horizontal, 40)
+                NavHeader(flow: $flow, backTarget: .splash)
                 .padding(.top, 60)
                 .padding(.bottom, 20)
 
                 Spacer()
 
                 ZStack {
-                    CloudLayer(color: Color(hex: "#2A003A"), ellipseCount: 50, offsetY: 260)
+                    CloudLayer(color: Color.blue3, ellipseCount: 50, offsetY: 260)
 
-                    Image(isOpen ? "mail_open" : "mail")
+                    Image(isOpen ? "card1-open" : "card1")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 260)
+                        //.frame(width: 260)
                         .offset(y: jump ? -80 : 60)
                         .animation(.interpolatingSpring(stiffness: 150, damping: 10), value: jump)
                         .animation(.easeInOut(duration: 0.3), value: isOpen)
@@ -53,13 +35,13 @@ struct ContentView: View {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.3) {
                                 jump = false
                                 withAnimation {
-                                    flow = .sent
+                                    flow = .coverdesign
                                 }
                             }
                         }
 
-                    CloudLayer(color: Color(hex: "#42005C"), ellipseCount: 50, offsetY: 320)
-                    CloudLayer(color: Color(hex: "#F00C91"), ellipseCount: 80, offsetY: 440)
+                    CloudLayer(color: Color.blue2, ellipseCount: 50, offsetY: 320)
+                    CloudLayer(color: Color.logoBlue, ellipseCount: 80, offsetY: 440)
                 }
 
                 Spacer()

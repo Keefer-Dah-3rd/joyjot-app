@@ -11,6 +11,8 @@ enum AppFlow {
     case splash
     case contacts
     case content
+    case coverdesign
+    case messagefold
     case sent
 }
 
@@ -25,6 +27,10 @@ struct MainRouterView: View {
             ContactsView(flow: $flow)
         case .content:
             ContentView(flow: $flow)
+        case .coverdesign:
+            CoverDesignView(flow: $flow)
+        case .messagefold:
+            MessageFoldView(flow: $flow)
         case .sent:
             SentView(flow: $flow)
         }

@@ -14,55 +14,25 @@ struct SentView: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "#21077D")
+            Color.bg1
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // Nav
-                HStack {
-                    Button(action: {
-                        withAnimation {
-                            flow = .content
-                        }
-                    }) {
-                        Image(systemName: "arrow.left")
-                            .foregroundColor(Color(hex: "#F00C91"))
-                            .font(.title2)
-                    }
-                    Spacer()
-                    Image(systemName: "person.fill")
-                        .foregroundColor(Color(hex: "#F00C91"))
-                        .font(.title2)
-                }
-                .padding(.horizontal, 40)
+                NavHeader(flow: $flow, backTarget: .splash)
                 .padding(.top, 60)
-                .padding(.bottom, 20)
+                .padding(.bottom, -40)
 
                 Spacer()
 
                 ZStack {
                     // Clouds dakest color
-                    SmallCloudCluster(color: Color(hex: "#2A003A"), position: CGPoint(x: 290, y: 65))
-                    SmallCloudCluster(color: Color(hex: "#2A003A"), position: CGPoint(x: 200, y: 190))
+                    SmallCloudCluster(color: Color.blue3, position: CGPoint(x: 290, y: 65))
+                    SmallCloudCluster(color: Color.blue3, position: CGPoint(x: 200, y: 190))
                     
                     ZStack {
-                        // Speed lines
-                        VStack(spacing: 6) {
-                            Rectangle()
-                                .fill(Color.white.opacity(0.8))
-                                .frame(width: 30, height: 3)
-                            Rectangle()
-                                .fill(Color.white.opacity(0.8))
-                                .frame(width: 20, height: 3)
-                            Rectangle()
-                                .fill(Color.white.opacity(0.8))
-                                .frame(width: 10, height: 3)
-                        }
-                        .offset(x: sway ? -45 : -55, y: -5) // Positioned to the left of envelope
-                        .opacity(0.8)
-
                         // Envelope
-                        Image("mail")
+                        Image("card1")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 200)
@@ -78,12 +48,12 @@ struct SentView: View {
                     }
 
                     // Clouds mid color
-                    SmallCloudCluster(color: Color(hex: "#42005C"), position: CGPoint(x: 240, y: -50))
-                    SmallCloudCluster(color: Color(hex: "#42005C"), position: CGPoint(x: 130, y: 240))
+                    SmallCloudCluster(color: Color.blue2, position: CGPoint(x: 240, y: -50))
+                    SmallCloudCluster(color: Color.blue2, position: CGPoint(x: 130, y: 240))
                         
                     //Clouds brightist color
-                    SmallCloudCluster(color: Color(hex: "#F00C91"), position: CGPoint(x: 85, y: 5))
-                    SmallCloudCluster(color: Color(hex: "#F00C91"), position: CGPoint(x: 320, y: 220))
+                    SmallCloudCluster(color: Color.logoBlue, position: CGPoint(x: 85, y: 5))
+                    SmallCloudCluster(color: Color.logoBlue, position: CGPoint(x: 320, y: 220))
                 }
                 .frame(height: 200)
 
@@ -92,7 +62,7 @@ struct SentView: View {
                 VStack(spacing: 4) {
                     Text("Jot On Route")
                         .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(Color(hex: "#F00C91"))
+                        .foregroundColor(Color.logoBlue)
 
                     Text("Your message is being sent to")
                         .font(.system(size: 18))
@@ -106,26 +76,16 @@ struct SentView: View {
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 40)
 
-                Button(action: {
-                    withAnimation {
-                        flow = .splash
-                    }
-                }) {
-                    Text("Go back to the beginning")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color(hex: "#F00C91"))
-                        .cornerRadius(100)
-                        .padding(.horizontal, 40)
+                ctaButton(title: "Go back to the beginning") {
+                    flow = .splash // or whichever view you want to navigate to
                 }
 
-                Text("There is nothing left this demo, fuck off and send another compliment")
+                Text("There is nothing left in this demo, fuck off and send another compliment")
                     .font(.system(size: 12))
                     .foregroundColor(.white.opacity(0.4))
                     .padding(.top, 20)
                     .padding(.horizontal, 40)
+                    .padding(.bottom, 20)
                     .multilineTextAlignment(.center)
             }
         }
